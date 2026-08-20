@@ -1,0 +1,31 @@
+services:
+  runner:
+    image: ghcr.io/lhtran-homelab/gh-runner-container:latest
+    # Uncomment to build locally instead of pulling from GHCR
+    # build: .
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "pgrep", "-f", "run.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      mode: replicated
+      replicas: 2
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.4'
+          memory: 256M
