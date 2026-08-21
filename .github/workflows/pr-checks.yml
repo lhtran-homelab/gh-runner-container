@@ -1,4 +1,4 @@
-name: PR Validation
+name: PR Checks
 
 on:
   pull_request:
@@ -8,6 +8,7 @@ on:
 
 permissions:
   pull-requests: read
+  contents: read
 
 jobs:
   title-check:
@@ -29,41 +30,35 @@ jobs:
             ci
             chore
             revert
-
-  changes:
-    runs-on: ubuntu-latest
-    outputs:
-      src: ${{ steps.filter.outputs.src }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          filters: |
-            src:
-              - 'src/**'
   
   build-check:
-    needs: changes
-    if: needs.changes.outputs.src == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v7
 
+      - name: Check for changes in src/
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            src:
+              - 'src/**'
+
       - name: Set up QEMU
+        if: steps.filter.outputs.src == 'true'
         uses: docker/setup-qemu-action@v4
 
       - name: Set up Docker Buildx
+        if: steps.filter.outputs.src == 'true'
         uses: docker/setup-buildx-action@v4
 
       - name: Build image (Dry Run)
+        if: steps.filter.outputs.src == 'true'
         uses: docker/build-push-action@v7
         with:
           context: ./src
           platforms: linux/amd64,linux/arm64
           push: false 
           cache-from: type=gha
-          cache-to: type=gha,mode=max      
-                        
-
+          cache-to: type=gha,mode=max
