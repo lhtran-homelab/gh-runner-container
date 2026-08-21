@@ -5,6 +5,8 @@ on:
     types: [opened, edited, reopened, synchronize]
     branches:
       - main
+    paths:
+      - src/**
 
 permissions:
   contents: read
