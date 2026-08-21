@@ -4,7 +4,7 @@ on:
   pull_request:
     types: [opened, edited, reopened, synchronize]
     branches:
-      - main
+      - master
     paths:
       - src/**
 
@@ -27,7 +27,7 @@ jobs:
       - name: Build image (Dry Run)
         uses: docker/build-push-action@v7
         with:
-          context: .
+          context: ./src
           platforms: linux/amd64,linux/arm64
           push: false 
           cache-from: type=gha
