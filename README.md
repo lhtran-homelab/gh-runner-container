@@ -8,7 +8,7 @@ Credit to: https://github.com/youssefbrr/self-hosted-runner/
 
 ```sh
 git clone https://github.com/lhtran-homelab/gh-runner-container.git
-cd self-hosted-runner
+cd gh-runner-container/src
 cp .env.example .env        # fill in REPO, REG_TOKEN
 ```
 

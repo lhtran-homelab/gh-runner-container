@@ -1,36 +1,17 @@
-name: PR Checks
+name: Build check
 
 on:
   pull_request:
     types: [opened, edited, reopened, synchronize]
     branches:
-      - master
+      - main
+    paths:
+      - 'src/**'
 
 permissions:
-  pull-requests: read
   contents: read
 
 jobs:
-  title-check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: amannn/action-semantic-pull-request@v6
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          types: |
-            feat
-            fix
-            docs
-            style
-            refactor
-            perf
-            test
-            build
-            ci
-            chore
-            revert
-
   build-check:
     runs-on: ubuntu-latest
     if: "!startsWith(github.head_ref, 'release-please')"
@@ -51,4 +32,4 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: false 
           cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-to: type=gha,mode=max      
